@@ -1,12 +1,16 @@
 package sample;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class Character {
-    Image characterIcon;
-    int xPos, yPos;
+    Image characterImage;
+    ImageView characterIcon;
 
-    Character(String characterIconPath){
-        characterIcon = new Image(characterIconPath);
+    Character(String characterIconPath, int sizeX, int sizeY){
+        characterImage = new Image(characterIconPath);
+        characterIcon = new ImageView(characterImage);
+        characterIcon.setFitWidth(sizeX);
+        characterIcon.setFitHeight(sizeY);
     }
 }

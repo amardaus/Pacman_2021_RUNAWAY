@@ -1,73 +1,71 @@
 package sample;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleLongProperty;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Game extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) {
         int windowSizeX = 800;
         int windowSizeY = 800;
+        int n = 20; int m = 20;
+        final double speed = 200;
 
         String playerIconPath = "file:/home/olcia/Documents/Mimoza/Pacman_2021_RUNAWAY/images/player.jpg";
-        Player player = new Player(playerIconPath);
+        Player player = new Player(playerIconPath,windowSizeX/n,windowSizeX/m);
 
         Pane pane = new Pane();
-        ImageView playerIcon = new ImageView(player.characterIcon);
-        playerIcon.setFitHeight(Math.round(windowSizeX/10.0));
-        playerIcon.setFitWidth(Math.round(windowSizeY/10.0));
-        pane.getChildren().addAll(playerIcon);
+        GameBoard gameboard = new GameBoard(n,m);
+        pane.setStyle("-fx-background-color: #e0ffff");
+
+        int rectSizeX = windowSizeX/gameboard.n;
+        int rectSizeY = windowSizeY/gameboard.m;
+        System.out.println(gameboard.board.length);
+        System.out.println(gameboard.board[0].length);
+        for(int i = 0; i < gameboard.board.length; i++){
+            for(int j = 0; j < gameboard.board[0].length; j++){
+                if(gameboard.board[i][j] == 0){
+                    Rectangle rect = new Rectangle(j*rectSizeX, i*rectSizeY, rectSizeX, rectSizeY);
+                    rect.setFill(Color.DARKSEAGREEN);
+                    pane.getChildren().add(rect);
+                }
+                else if(gameboard.board[i][j] == 1){
+                    Rectangle rect = new Rectangle(j*rectSizeX, i*rectSizeY, rectSizeX, rectSizeY);
+                    rect.setFill(Color.DARKGREEN);
+                    pane.getChildren().add(rect);
+                }
+            }
+        }
+        player.characterIcon.setTranslateX(1*rectSizeX);
+        player.characterIcon.setTranslateY(1*rectSizeY);
+        pane.getChildren().add(player.characterIcon);
         Scene scene = new Scene(pane,windowSizeX,windowSizeY);
 
-        final double speed = 200;
-        final DoubleProperty playerVelocityX = new SimpleDoubleProperty();
-        final DoubleProperty playerVelocityY = new SimpleDoubleProperty();
-        final LongProperty lastUpdateTime = new SimpleLongProperty();
-        final AnimationTimer gameAnimation = new AnimationTimer() {
-            @Override
-            public void handle(long timestamp) {
-                if(lastUpdateTime.get()>0){
-                    final double elapsedSeconds = (timestamp - lastUpdateTime.get())/1000000000.0;
-                    final double deltaX = elapsedSeconds * playerVelocityX.get();
-                    final double deltaY = elapsedSeconds * playerVelocityY.get();
-                    final double oldX = playerIcon.getTranslateX();
-                    final double oldY = playerIcon.getTranslateY();
-                    final double newX = oldX + deltaX;
-                    final double newY = oldY + deltaY;
-                    playerIcon.setTranslateX(newX);
-                    playerIcon.setTranslateY(newY);
-                }
-                lastUpdateTime.set(timestamp);
-            }
-        };
-        gameAnimation.start();
+        PlayerAnimation playerAnimation = new PlayerAnimation(player,windowSizeX,windowSizeY);
+        playerAnimation.start();
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
                 if(keyEvent.getCode() == KeyCode.RIGHT){
-                    playerVelocityX.set(speed);
+                    playerAnimation.playerVelocityX.set(speed);
                 }
                 else if(keyEvent.getCode() == KeyCode.LEFT){
-                    playerVelocityX.set(-speed);
+                    playerAnimation.playerVelocityX.set(-speed);
                 }
                 else if (keyEvent.getCode() == KeyCode.UP){
-                    playerVelocityY.set(-speed);
+                    playerAnimation.playerVelocityY.set(-speed);
                 }
                 else if (keyEvent.getCode() == KeyCode.DOWN){
-                    playerVelocityY.set(speed);
+                    playerAnimation.playerVelocityY.set(speed);
                 }
             }
         });
@@ -76,10 +74,10 @@ public class Game extends Application {
             @Override
             public void handle(KeyEvent keyEvent) {
                 if (keyEvent.getCode() == KeyCode.RIGHT || keyEvent.getCode() == KeyCode.LEFT) {
-                    playerVelocityX.set(0);
+                    playerAnimation.playerVelocityX.set(0);
                 }
                 else if(keyEvent.getCode() == KeyCode.UP || keyEvent.getCode() == KeyCode.DOWN){
-                    playerVelocityY.set(0);
+                    playerAnimation.playerVelocityY.set(0);
                 }
             }
         });
