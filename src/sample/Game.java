@@ -7,8 +7,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 
 public class Game extends Application {
 
@@ -16,7 +19,8 @@ public class Game extends Application {
     public void start(Stage primaryStage) {
         int windowSizeX = 800;
         int windowSizeY = 800;
-        int n = 20; int m = 20;
+        int n = 10;
+        int m = n;
         final double speed = 200;
 
         String playerIconPath = "file:/home/olcia/Documents/Mimoza/Pacman_2021_RUNAWAY/images/player.jpg";
@@ -28,28 +32,31 @@ public class Game extends Application {
 
         int rectSizeX = windowSizeX/gameboard.n;
         int rectSizeY = windowSizeY/gameboard.m;
-        System.out.println(gameboard.board.length);
-        System.out.println(gameboard.board[0].length);
+        ArrayList<Rectangle> borders = new ArrayList<>();
+        ArrayList<Circle> circles = new ArrayList<>();
         for(int i = 0; i < gameboard.board.length; i++){
             for(int j = 0; j < gameboard.board[0].length; j++){
+                Rectangle rect = new Rectangle(j*rectSizeX, i*rectSizeY, rectSizeX, rectSizeY);
                 if(gameboard.board[i][j] == 0){
-                    Rectangle rect = new Rectangle(j*rectSizeX, i*rectSizeY, rectSizeX, rectSizeY);
                     rect.setFill(Color.DARKSEAGREEN);
-                    pane.getChildren().add(rect);
+                    Circle circ = new Circle(j*rectSizeX+0.5*rectSizeX,i*rectSizeY+rectSizeY*0.5,5,Color.ALICEBLUE);
+                    circles.add(circ);
                 }
                 else if(gameboard.board[i][j] == 1){
-                    Rectangle rect = new Rectangle(j*rectSizeX, i*rectSizeY, rectSizeX, rectSizeY);
                     rect.setFill(Color.DARKGREEN);
-                    pane.getChildren().add(rect);
+                    borders.add(rect);
                 }
+                pane.getChildren().add(rect);
             }
         }
-        player.characterIcon.setTranslateX(1*rectSizeX);
-        player.characterIcon.setTranslateY(1*rectSizeY);
+        pane.getChildren().addAll(circles);
+        player.characterIcon.setTranslateX(rectSizeX+1);
+        player.characterIcon.setTranslateY(rectSizeY+1);
         pane.getChildren().add(player.characterIcon);
         Scene scene = new Scene(pane,windowSizeX,windowSizeY);
 
-        PlayerAnimation playerAnimation = new PlayerAnimation(player,windowSizeX,windowSizeY);
+        PlayerAnimation playerAnimation = new PlayerAnimation(player,pane,windowSizeX,windowSizeY,borders,circles);
+
         playerAnimation.start();
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
