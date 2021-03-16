@@ -33,7 +33,6 @@ public class PlayerAnimation extends AnimationTimer {
     }
 
     void eat(){
-        System.out.println("eat");
         Iterator<Circle> it = circles.iterator();
         while(it.hasNext()){
             Circle circle = it.next();
@@ -52,45 +51,39 @@ public class PlayerAnimation extends AnimationTimer {
             final double deltaY = elapsedSeconds * playerVelocityY.get();
             final double oldX = player.characterIcon.getTranslateX();
             final double oldY = player.characterIcon.getTranslateY();
-            double newX, newY;
-            newX = oldX + deltaX;
-            newY = oldY + deltaY;
-            eat();
+            //eat();
 
-            Position pos = checkCollisions(newX, newY);
-            player.characterIcon.setTranslateX(pos.x);
-            player.characterIcon.setTranslateY(pos.y);
+            Position pos = checkCollisions(oldX,oldY,deltaX,deltaY);
+            player.characterIcon.setTranslateX(pos.getX());
+            player.characterIcon.setTranslateY(pos.getY());
         }
         lastUpdateTime.set(timestamp);
     }
 
-    private Position checkCollisions(double newX, double newY) {
-        Position pos = new Position(newX,newY);
+    private Position checkCollisions(double oldX, double oldY, double deltaX, double deltaY) {
+        Position pos = new Position(oldX+deltaX,oldY+deltaY);
+        boolean movingUp = (deltaY < 0);
+        boolean movingDown = (deltaY > 0);
+        boolean movingLeft = (deltaX < 0);
+        boolean movingRight = (deltaX > 0);
+        System.out.println("deltaX:" + deltaX + " deltaY: " + deltaY);
+
+
         Bounds bounds = player.characterIcon.getBoundsInParent();
         for (Rectangle border: borders){
             if(border.intersects(bounds)){
-                System.out.println(bounds.getMaxX());
-                System.out.println(border.getBoundsInParent().getMinX());
-                System.out.println("--------");
-
-                // TO NIEDZIAŁA BO JEDNOCZEŚNIE ŁAPIE SIĘ KILKA COLLIDERÓW - TRZBA UWZGLĘDNIĆ KIERUNEK PRZEMIESZCZENIA
-                /*if(bounds.getMinX() < border.getBoundsInParent().getMaxX()){
-                    //pos.x = border.getBoundsInParent().getMaxX() + 1;
-                    System.out.println(bounds.getMinX());
-                    System.out.println(border.getBoundsInParent().getMaxX());
-                    System.out.println("--------");
-                    System.out.println("left");
+                if(movingLeft){
+                    pos.setX(oldX-deltaX);
                 }
-                else if(bounds.getMaxX() > border.getBoundsInParent().getMinX()){
-                    //pos.x = border.getBoundsInParent().getMinX() - 81;
-                    System.out.println("right");
+                else if (movingRight){
+                    pos.setX(oldX-deltaX);
                 }
-                else if(bounds.getMinY() > border.getBoundsInParent().getMaxY()){
-                    System.out.println("top");
+                else if(movingUp){
+                    pos.setY(oldY-deltaY);
                 }
-                else if(bounds.getMaxY() > border.getBoundsInParent().getMinY()){
-                    //System.out.println("bottom");
-                }*/
+                else if(movingDown){
+                    pos.setY(oldY+deltaY);
+                }
                 return pos;
             }
         }

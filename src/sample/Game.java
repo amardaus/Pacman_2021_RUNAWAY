@@ -19,7 +19,7 @@ public class Game extends Application {
     public void start(Stage primaryStage) {
         int windowSizeX = 800;
         int windowSizeY = 800;
-        int n = 10;
+        int n = 20;
         int m = n;
         final double speed = 200;
 
@@ -38,12 +38,12 @@ public class Game extends Application {
             for(int j = 0; j < gameboard.board[0].length; j++){
                 Rectangle rect = new Rectangle(j*rectSizeX, i*rectSizeY, rectSizeX, rectSizeY);
                 if(gameboard.board[i][j] == 0){
-                    rect.setFill(Color.DARKSEAGREEN);
-                    Circle circ = new Circle(j*rectSizeX+0.5*rectSizeX,i*rectSizeY+rectSizeY*0.5,5,Color.ALICEBLUE);
+                    rect.setFill(Color.DARKGREY);
+                    Circle circ = new Circle(j*rectSizeX+0.5*rectSizeX,i*rectSizeY+rectSizeY*0.5,5,Color.BLANCHEDALMOND);
                     circles.add(circ);
                 }
                 else if(gameboard.board[i][j] == 1){
-                    rect.setFill(Color.DARKGREEN);
+                    rect.setFill(Color.DARKBLUE);
                     borders.add(rect);
                 }
                 pane.getChildren().add(rect);
@@ -64,15 +64,19 @@ public class Game extends Application {
             public void handle(KeyEvent keyEvent) {
                 if(keyEvent.getCode() == KeyCode.RIGHT){
                     playerAnimation.playerVelocityX.set(speed);
+                    playerAnimation.playerVelocityY.set(0);
                 }
                 else if(keyEvent.getCode() == KeyCode.LEFT){
                     playerAnimation.playerVelocityX.set(-speed);
+                    playerAnimation.playerVelocityY.set(0);
                 }
                 else if (keyEvent.getCode() == KeyCode.UP){
                     playerAnimation.playerVelocityY.set(-speed);
+                    playerAnimation.playerVelocityX.set(0);
                 }
                 else if (keyEvent.getCode() == KeyCode.DOWN){
                     playerAnimation.playerVelocityY.set(speed);
+                    playerAnimation.playerVelocityX.set(0);
                 }
             }
         });
