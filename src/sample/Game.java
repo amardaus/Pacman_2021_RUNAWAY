@@ -76,21 +76,8 @@ public class Game extends Application {
                     playerAnimation.playerVelocityY.set(0);
                 }
                 else if(keyEvent.getCode() == KeyCode.LEFT){
-                    boolean coll = false;
-                    for (Rectangle border: borders) {
-                        if(border.intersects(playerAnimation.player.characterIcon.getBoundsInParent())){
-                            System.out.println("xddd");
-                            //playerAnimation.player.characterIcon.setX();
-                            playerAnimation.playerVelocityX.set(0);
-                            playerAnimation.playerVelocityY.set(0);
-                            coll = true;
-                            break;
-                        }
-                    }
-                    if(!coll){
-                        playerAnimation.playerVelocityX.set(-speed);
-                        playerAnimation.playerVelocityY.set(0);
-                    }
+                    playerAnimation.playerVelocityX.set(-speed);
+                    playerAnimation.playerVelocityY.set(0);
                 }
                 else if (keyEvent.getCode() == KeyCode.UP){
                     playerAnimation.playerVelocityY.set(-speed);

@@ -22,6 +22,15 @@ public class PlayerAnimation extends AnimationTimer {
     int windowSizeY;
     ArrayList<Rectangle> borders;
     ArrayList<Circle> circles;
+    enum Direction{
+        NONE,
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN
+    };
+    Direction lastCollDirection;
+
 
     PlayerAnimation(Player player, Pane pane, int windowSizeX, int windowSizeY, ArrayList<Rectangle> borders, ArrayList<Circle> circles){
         this.player = player;
@@ -30,6 +39,7 @@ public class PlayerAnimation extends AnimationTimer {
         this.windowSizeY = windowSizeY;
         this.borders = borders;
         this.circles = circles;
+        lastCollDirection = Direction.NONE;
     }
 
     void eat(){
@@ -51,10 +61,9 @@ public class PlayerAnimation extends AnimationTimer {
             final double deltaY = elapsedSeconds * playerVelocityY.get();
             final double oldX = player.characterIcon.getTranslateX();
             final double oldY = player.characterIcon.getTranslateY();
-            eat();
+            //eat();
 
-            Position pos = new Position(oldX+deltaX,oldY+deltaY);
-            //Position pos = checkCollisions(oldX,oldY,deltaX,deltaY);
+            Position pos = checkCollisions(oldX,oldY,deltaX,deltaY);
             player.characterIcon.setTranslateX(pos.getX());
             player.characterIcon.setTranslateY(pos.getY());
         }
@@ -67,31 +76,44 @@ public class PlayerAnimation extends AnimationTimer {
         boolean movingDown = (deltaY > 0);
         boolean movingLeft = (deltaX < 0);
         boolean movingRight = (deltaX > 0);
+        boolean collisionDetected = false;
         //System.out.println("deltaX:" + deltaX + " deltaY: " + deltaY);
-
-        //https://stackoverflow.com/questions/28242260/rectangle-wall-collision-in-java
+        //https://gamedev.stackexchange.com/questions/31215/collision-detection-player-gets-stuck-in-platform-when-jumping
         Bounds bounds = player.characterIcon.getBoundsInParent();
         for (Rectangle border: borders){
             if(border.intersects(bounds)){
-                int d = 5;
-                if(movingLeft){
-                    System.out.println("L");
-                    //pos.setX(oldX+d);
+                int d = 15;
+                collisionDetected = true;
+
+                if(movingLeft && (lastCollDirection == Direction.NONE || lastCollDirection == Direction.LEFT)){
+                    System.out.println("L" + " " + lastCollDirection);
+                    pos.setX(oldX+d);
+                    playerVelocityX.set(0);
+                    lastCollDirection = Direction.LEFT;
                 }
-                else if (movingRight){
-                    System.out.println("R");
-                    //pos.setX(oldX-d);
+                else if (movingRight && (lastCollDirection == Direction.NONE || lastCollDirection == Direction.RIGHT)){
+                    System.out.println("R" + " " + lastCollDirection);
+                    pos.setX(oldX-d);
+                    playerVelocityX.set(0);
+                    lastCollDirection = Direction.RIGHT;
                 }
-                else if(movingUp){
-                    System.out.println("U");
-                    //pos.setY(oldY+d);
+                else if(movingUp && (lastCollDirection == Direction.NONE || lastCollDirection == Direction.UP)){
+                    System.out.println("U" + " " + lastCollDirection);
+                    pos.setY(oldY+d);
+                    playerVelocityY.set(0);
+                    lastCollDirection = Direction.UP;
                 }
-                else if(movingDown){
-                    System.out.println("D");
-                    //pos.setY(oldY-d);
+                else if(movingDown && (lastCollDirection == Direction.NONE || lastCollDirection == Direction.DOWN)){
+                    System.out.println("D" + " " + lastCollDirection);
+                    pos.setY(oldY-d);
+                    playerVelocityY.set(0);
+                    lastCollDirection = Direction.DOWN;
                 }
-                return pos;
+                break;
             }
+        }
+        if(!collisionDetected){
+            lastCollDirection = Direction.NONE;
         }
         return pos;
     }
