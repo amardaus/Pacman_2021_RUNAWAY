@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -19,7 +20,7 @@ public class Game extends Application {
     public void start(Stage primaryStage) {
         int windowSizeX = 800;
         int windowSizeY = 800;
-        int n = 20;
+        int n = 10;
         int m = n;
         final double speed = 200;
 
@@ -56,19 +57,40 @@ public class Game extends Application {
         Scene scene = new Scene(pane,windowSizeX,windowSizeY);
 
         PlayerAnimation playerAnimation = new PlayerAnimation(player,pane,windowSizeX,windowSizeY,borders,circles);
-
         playerAnimation.start();
+
+        /*int N = 3;
+        Opponent[] opponents = new Opponent[N];
+        for (Opponent opponent: opponents) {
+            opponentAnimation =
+        }*/
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
                 if(keyEvent.getCode() == KeyCode.RIGHT){
+                    // tutaj sprawdzac kolizje i na nie pozwolić zanim jeszcze się wydarzy
+                    // jezeli jest kolizja to ZATRZYMUJE GRACZA, NIE POZWALAM TEMU DEBILOWI IŚĆ DALEJ
+                    // tylko go cofam i git.
                     playerAnimation.playerVelocityX.set(speed);
                     playerAnimation.playerVelocityY.set(0);
                 }
                 else if(keyEvent.getCode() == KeyCode.LEFT){
-                    playerAnimation.playerVelocityX.set(-speed);
-                    playerAnimation.playerVelocityY.set(0);
+                    boolean coll = false;
+                    for (Rectangle border: borders) {
+                        if(border.intersects(playerAnimation.player.characterIcon.getBoundsInParent())){
+                            System.out.println("xddd");
+                            //playerAnimation.player.characterIcon.setX();
+                            playerAnimation.playerVelocityX.set(0);
+                            playerAnimation.playerVelocityY.set(0);
+                            coll = true;
+                            break;
+                        }
+                    }
+                    if(!coll){
+                        playerAnimation.playerVelocityX.set(-speed);
+                        playerAnimation.playerVelocityY.set(0);
+                    }
                 }
                 else if (keyEvent.getCode() == KeyCode.UP){
                     playerAnimation.playerVelocityY.set(-speed);

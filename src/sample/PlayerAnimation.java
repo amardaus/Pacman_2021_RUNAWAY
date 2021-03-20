@@ -51,9 +51,10 @@ public class PlayerAnimation extends AnimationTimer {
             final double deltaY = elapsedSeconds * playerVelocityY.get();
             final double oldX = player.characterIcon.getTranslateX();
             final double oldY = player.characterIcon.getTranslateY();
-            //eat();
+            eat();
 
-            Position pos = checkCollisions(oldX,oldY,deltaX,deltaY);
+            Position pos = new Position(oldX+deltaX,oldY+deltaY);
+            //Position pos = checkCollisions(oldX,oldY,deltaX,deltaY);
             player.characterIcon.setTranslateX(pos.getX());
             player.characterIcon.setTranslateY(pos.getY());
         }
@@ -66,23 +67,28 @@ public class PlayerAnimation extends AnimationTimer {
         boolean movingDown = (deltaY > 0);
         boolean movingLeft = (deltaX < 0);
         boolean movingRight = (deltaX > 0);
-        System.out.println("deltaX:" + deltaX + " deltaY: " + deltaY);
+        //System.out.println("deltaX:" + deltaX + " deltaY: " + deltaY);
 
-
+        //https://stackoverflow.com/questions/28242260/rectangle-wall-collision-in-java
         Bounds bounds = player.characterIcon.getBoundsInParent();
         for (Rectangle border: borders){
             if(border.intersects(bounds)){
+                int d = 5;
                 if(movingLeft){
-                    pos.setX(oldX-deltaX);
+                    System.out.println("L");
+                    //pos.setX(oldX+d);
                 }
                 else if (movingRight){
-                    pos.setX(oldX-deltaX);
+                    System.out.println("R");
+                    //pos.setX(oldX-d);
                 }
                 else if(movingUp){
-                    pos.setY(oldY-deltaY);
+                    System.out.println("U");
+                    //pos.setY(oldY+d);
                 }
                 else if(movingDown){
-                    pos.setY(oldY+deltaY);
+                    System.out.println("D");
+                    //pos.setY(oldY-d);
                 }
                 return pos;
             }
