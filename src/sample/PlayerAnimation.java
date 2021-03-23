@@ -24,14 +24,8 @@ public class PlayerAnimation extends AnimationTimer {
     int windowSizeY;
     ArrayList<Rectangle> borders;
     ArrayList<Circle> circles;
-    enum Direction{
-        NONE,
-        LEFT,
-        RIGHT,
-        UP,
-        DOWN
-    };
     Direction lastCollDirection;
+    final double speed = 200;
 
 
     PlayerAnimation(Player player, Pane pane, int windowSizeX, int windowSizeY, ArrayList<Rectangle> borders, ArrayList<Circle> circles){
@@ -42,6 +36,41 @@ public class PlayerAnimation extends AnimationTimer {
         this.borders = borders;
         this.circles = circles;
         lastCollDirection = Direction.NONE;
+    }
+
+    void move(Direction dir){
+        System.out.println(dir);
+        switch (dir){
+            case LEFT:
+                System.out.println("l");
+                playerVelocityX.set(-speed);
+                playerVelocityY.set(0);
+                break;
+            case RIGHT:
+                System.out.println("r");
+                playerVelocityX.set(speed);
+                playerVelocityY.set(0);
+                break;
+            case UP:
+                System.out.println("u");
+                playerVelocityY.set(-speed);
+                playerVelocityX.set(0);
+                break;
+            case DOWN:
+                System.out.println("d");
+                playerVelocityY.set(speed);
+                playerVelocityX.set(0);
+                break;
+            default:
+                break;
+        }
+    }
+
+    void stopMovingHorizontal(){
+        playerVelocityX.set(0);
+    }
+    void stopMovingVertical(){
+        playerVelocityY.set(0);
     }
 
     void eat(){
@@ -74,7 +103,7 @@ public class PlayerAnimation extends AnimationTimer {
 
     private Position checkCollisions(double oldX, double oldY, double deltaX, double deltaY) {
         Position pos = new Position(oldX+deltaX,oldY+deltaY);
-        boolean movingUp = (deltaY < 0);
+        /*boolean movingUp = (deltaY < 0);
         boolean movingDown = (deltaY > 0);
         boolean movingLeft = (deltaX < 0);
         boolean movingRight = (deltaX > 0);
@@ -115,7 +144,7 @@ public class PlayerAnimation extends AnimationTimer {
         }
         if(!collisionDetected){
             lastCollDirection = Direction.NONE;
-        }
+        }*/
         return pos;
     }
 }

@@ -5,13 +5,11 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-
 import java.util.ArrayList;
 
 public class Game extends Application {
@@ -22,7 +20,6 @@ public class Game extends Application {
         int windowSizeY = 800;
         int n = 10;
         int m = n;
-        final double speed = 200;
 
         String playerIconPath = "file:/home/olcia/Documents/Mimoza/Pacman_2021_RUNAWAY/images/player.jpg";
         Player player = new Player(playerIconPath,windowSizeX/n,windowSizeX/m);
@@ -69,23 +66,16 @@ public class Game extends Application {
             @Override
             public void handle(KeyEvent keyEvent) {
                 if(keyEvent.getCode() == KeyCode.RIGHT){
-                    // tutaj sprawdzac kolizje i na nie pozwolić zanim jeszcze się wydarzy
-                    // jezeli jest kolizja to ZATRZYMUJE GRACZA, NIE POZWALAM TEMU DEBILOWI IŚĆ DALEJ
-                    // tylko go cofam i git.
-                    playerAnimation.playerVelocityX.set(speed);
-                    playerAnimation.playerVelocityY.set(0);
+                    playerAnimation.move(Direction.RIGHT);
                 }
                 else if(keyEvent.getCode() == KeyCode.LEFT){
-                    playerAnimation.playerVelocityX.set(-speed);
-                    playerAnimation.playerVelocityY.set(0);
+                    playerAnimation.move(Direction.LEFT);
                 }
                 else if (keyEvent.getCode() == KeyCode.UP){
-                    playerAnimation.playerVelocityY.set(-speed);
-                    playerAnimation.playerVelocityX.set(0);
+                    playerAnimation.move(Direction.UP);
                 }
                 else if (keyEvent.getCode() == KeyCode.DOWN){
-                    playerAnimation.playerVelocityY.set(speed);
-                    playerAnimation.playerVelocityX.set(0);
+                    playerAnimation.move(Direction.DOWN);
                 }
             }
         });
@@ -94,10 +84,10 @@ public class Game extends Application {
             @Override
             public void handle(KeyEvent keyEvent) {
                 if (keyEvent.getCode() == KeyCode.RIGHT || keyEvent.getCode() == KeyCode.LEFT) {
-                    playerAnimation.playerVelocityX.set(0);
+                    playerAnimation.stopMovingHorizontal();
                 }
                 else if(keyEvent.getCode() == KeyCode.UP || keyEvent.getCode() == KeyCode.DOWN){
-                    playerAnimation.playerVelocityY.set(0);
+                    playerAnimation.stopMovingVertical();
                 }
             }
         });
