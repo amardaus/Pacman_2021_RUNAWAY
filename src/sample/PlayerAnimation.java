@@ -12,6 +12,8 @@ import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import static java.lang.Math.abs;
+
 public class PlayerAnimation extends AnimationTimer {
     final DoubleProperty playerVelocityX = new SimpleDoubleProperty();
     final DoubleProperty playerVelocityY = new SimpleDoubleProperty();
@@ -77,14 +79,13 @@ public class PlayerAnimation extends AnimationTimer {
         boolean movingLeft = (deltaX < 0);
         boolean movingRight = (deltaX > 0);
         boolean collisionDetected = false;
+        double d = 3*(abs(deltaX)+abs(deltaY));
         //System.out.println("deltaX:" + deltaX + " deltaY: " + deltaY);
         //https://gamedev.stackexchange.com/questions/31215/collision-detection-player-gets-stuck-in-platform-when-jumping
         Bounds bounds = player.characterIcon.getBoundsInParent();
         for (Rectangle border: borders){
             if(border.intersects(bounds)){
-                int d = 15;
                 collisionDetected = true;
-
                 if(movingLeft && (lastCollDirection == Direction.NONE || lastCollDirection == Direction.LEFT)){
                     System.out.println("L" + " " + lastCollDirection);
                     pos.setX(oldX+d);
