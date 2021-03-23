@@ -33,7 +33,12 @@ public class PlayerAnimation extends AnimationTimer {
         this.windowSizeY = windowSizeY;
         this.borders = borders;
         this.circles = circles;
+
+        int initialPosX = 81;
+        int initialPosY = 81;
         movingDirection = Direction.NONE;
+        player.characterIcon.setTranslateX(initialPosX);
+        player.characterIcon.setTranslateY(initialPosY);
     }
 
     void move(Direction dir){

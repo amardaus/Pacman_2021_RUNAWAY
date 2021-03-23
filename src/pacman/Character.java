@@ -7,7 +7,7 @@ public class Character {
     Image characterImage;
     ImageView characterIcon;
 
-    Character(String characterIconPath, int sizeX, int sizeY){
+    Character(String characterIconPath, float sizeX, float sizeY){
         characterImage = new Image(characterIconPath);
         characterIcon = new ImageView(characterImage);
         characterIcon.setFitWidth(sizeX);

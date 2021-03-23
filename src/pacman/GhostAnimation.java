@@ -32,6 +32,13 @@ public class GhostAnimation extends AnimationTimer {
         this.borders = borders;
         movingDirection = Direction.RIGHT;
         ghostVelocityX.set(speed);
+
+        Random rand = new Random();
+        int initPosX = 100 + rand.nextInt(300);
+        int initPosY = 100 + rand.nextInt(300);
+        ghost.characterIcon.setTranslateX(initPosX);
+        ghost.characterIcon.setTranslateY(initPosY);
+        ghost.characterIcon.setPreserveRatio(true);
     }
 
     void move(Direction dir){
@@ -92,8 +99,11 @@ public class GhostAnimation extends AnimationTimer {
                 boolean b = rand.nextBoolean();
                 if(b){
                     ghostVelocityY.set(speed);
-                }else{
+                    movingDirection = Direction.UP;
+                }
+                else{
                     ghostVelocityY.set(-speed);
+                    movingDirection = Direction.DOWN;
                 }
                 ghostVelocityX.set(0);
             }
@@ -103,10 +113,13 @@ public class GhostAnimation extends AnimationTimer {
                 boolean b = rand.nextBoolean();
                 if(b){
                     ghostVelocityX.set(speed);
-                }else{
-                    ghostVelocityX.set(-speed);
+                    movingDirection = Direction.RIGHT;
                 }
-                ghostVelocityX.set(0);
+                else{
+                    ghostVelocityX.set(-speed);
+                    movingDirection = Direction.LEFT;
+                }
+                ghostVelocityY.set(0);
             }
         }
         return pos;

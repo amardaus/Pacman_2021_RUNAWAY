@@ -20,13 +20,12 @@ public class Game extends Application {
         int windowSizeY = 800;
         int n = 10;
         int m = n;
-
-        String playerIconPath = "file:/home/olcia/Documents/Mimoza/Pacman_2021_RUNAWAY/images/player.jpg";
-        Player player = new Player(playerIconPath,windowSizeX/n,windowSizeX/m);
-
-        Pane pane = new Pane();
+        float characterSizeX = windowSizeX/n;
+        float characterSizeY = windowSizeY/m;
         GameBoard gameboard = new GameBoard(n,m);
+        Pane pane = new Pane();
         pane.setStyle("-fx-background-color: #e0ffff");
+        Scene scene = new Scene(pane,windowSizeX,windowSizeY);
 
         int rectSizeX = windowSizeX/gameboard.n;
         int rectSizeY = windowSizeY/gameboard.m;
@@ -48,27 +47,21 @@ public class Game extends Application {
             }
         }
         pane.getChildren().addAll(circles);
-        player.characterIcon.setTranslateX(rectSizeX+1);
-        player.characterIcon.setTranslateY(rectSizeY+1);
-        pane.getChildren().add(player.characterIcon);
-        Scene scene = new Scene(pane,windowSizeX,windowSizeY);
 
+        String playerIconPath = "file:/home/olcia/Documents/Mimoza/Pacman_2021_RUNAWAY/images/player.jpg";
+        Player player = new Player(playerIconPath,characterSizeX,characterSizeY);
         PlayerAnimation playerAnimation = new PlayerAnimation(player,pane,windowSizeX,windowSizeY,borders,circles);
         playerAnimation.start();
+        pane.getChildren().add(player.characterIcon);
 
-        int N = 2;
-        Ghost[] ghosts = new Ghost[N];
-        GhostAnimation[] ghostAnimations = new GhostAnimation[N];
+        int ghostCount = 2;
+        Ghost[] ghosts = new Ghost[ghostCount];
         String ghostIconPath = "file:/home/olcia/Documents/Mimoza/Pacman_2021_RUNAWAY/images/ghost.png";
-        for (int i = 0; i < N; i++) {
-            ghosts[i] = new Ghost(ghostIconPath, windowSizeX, windowSizeY);
+        for (int i = 0; i < ghostCount; i++) {
+            ghosts[i] = new Ghost(ghostIconPath, characterSizeX, characterSizeY);
+            GhostAnimation ghostAnimation = new GhostAnimation(ghosts[i], pane,windowSizeX,windowSizeY,borders);
+            ghostAnimation.start();
             pane.getChildren().add(ghosts[i].characterIcon);
-            ghosts[i].characterIcon.setTranslateX(200);
-            ghosts[i].characterIcon.setTranslateY(200);
-            ghosts[i].characterIcon.setFitHeight(80);
-            ghosts[i].characterIcon.setPreserveRatio(true);
-            ghostAnimations[i] = new GhostAnimation(ghosts[i],pane,windowSizeX/n,windowSizeY/m,borders);
-            ghostAnimations[i].start();
         }
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
