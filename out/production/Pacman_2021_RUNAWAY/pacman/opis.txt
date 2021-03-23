@@ -1,0 +1,8 @@
+Możliwe do wyboru różne wersje np. uciekasz przed covidem albo przed politykami
+Jako zjadacz też wstawiasz własne zdjęcie
+
+TODO:
+- duszki
+- generowanie plaaanszy
+- zrobić porządek w klasie Game
+- punkty za zjadanie
