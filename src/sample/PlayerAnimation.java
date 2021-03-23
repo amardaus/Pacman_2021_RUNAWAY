@@ -22,9 +22,8 @@ public class PlayerAnimation extends AnimationTimer {
     int windowSizeY;
     ArrayList<Rectangle> borders;
     ArrayList<Circle> circles;
-    Direction lastCollDirection;
-    final double speed = 200;
     Direction movingDirection;
+    final double speed = 200;
 
 
     PlayerAnimation(Player player, Pane pane, int windowSizeX, int windowSizeY, ArrayList<Rectangle> borders, ArrayList<Circle> circles){
@@ -34,7 +33,6 @@ public class PlayerAnimation extends AnimationTimer {
         this.windowSizeY = windowSizeY;
         this.borders = borders;
         this.circles = circles;
-        lastCollDirection = Direction.NONE;
         movingDirection = Direction.NONE;
     }
 
@@ -104,65 +102,14 @@ public class PlayerAnimation extends AnimationTimer {
         Position pos = new Position(oldX+deltaX,oldY+deltaY);
 
         Bounds playerBounds = player.characterIcon.getBoundsInParent();
-        Rectangle playerRect = new Rectangle(playerBounds.getMinX()-deltaX,playerBounds.getMinY()-deltaY,playerBounds.getWidth()+2*deltaX,playerBounds.getHeight()+2*deltaY);
-        for (Rectangle border: borders){
-            if(border.intersects(playerRect.getBoundsInParent())){
+        for (Rectangle border: borders) {
+            if ((movingDirection == Direction.LEFT || movingDirection == Direction.RIGHT) && border.intersects(playerBounds.getMinX() + deltaX, playerBounds.getMinY(), playerBounds.getWidth(), playerBounds.getHeight())) {
                 pos.setX(oldX);
+            }
+            if ((movingDirection == Direction.UP || movingDirection == Direction.DOWN) && border.intersects(playerBounds.getMinX(), playerBounds.getMinY() + deltaY, playerBounds.getWidth(), playerBounds.getHeight())) {
                 pos.setY(oldY);
             }
-            /*if(movingDirection == Direction.LEFT){
-                Bounds borderBounds = border.getBoundsInParent();
-                if(borderBounds.getMaxX() < playerBounds.getMinX()){
-                    System.out.println("Niedaleko ktoregos lewoo");
-                }
-                else{
-                    System.out.println("Cosiędzieje");
-                }
-                //System.out.println(border.getBoundsInParent());
-            }*/
         }
-        /*boolean movingUp = (deltaY < 0);
-        boolean movingDown = (deltaY > 0);
-        boolean movingLeft = (deltaX < 0);
-        boolean movingRight = (deltaX > 0);
-        boolean collisionDetected = false;
-        double d = 3*(abs(deltaX)+abs(deltaY));
-        //System.out.println("deltaX:" + deltaX + " deltaY: " + deltaY);
-        //https://gamedev.stackexchange.com/questions/31215/collision-detection-player-gets-stuck-in-platform-when-jumping
-        Bounds bounds = player.characterIcon.getBoundsInParent();
-        for (Rectangle border: borders){
-            if(border.intersects(bounds)){
-                collisionDetected = true;
-                if(movingLeft && (lastCollDirection == Direction.NONE || lastCollDirection == Direction.LEFT)){
-                    System.out.println("L" + " " + lastCollDirection);
-                    pos.setX(oldX+d);
-                    playerVelocityX.set(0);
-                    lastCollDirection = Direction.LEFT;
-                }
-                else if (movingRight && (lastCollDirection == Direction.NONE || lastCollDirection == Direction.RIGHT)){
-                    System.out.println("R" + " " + lastCollDirection);
-                    pos.setX(oldX-d);
-                    playerVelocityX.set(0);
-                    lastCollDirection = Direction.RIGHT;
-                }
-                else if(movingUp && (lastCollDirection == Direction.NONE || lastCollDirection == Direction.UP)){
-                    System.out.println("U" + " " + lastCollDirection);
-                    pos.setY(oldY+d);
-                    playerVelocityY.set(0);
-                    lastCollDirection = Direction.UP;
-                }
-                else if(movingDown && (lastCollDirection == Direction.NONE || lastCollDirection == Direction.DOWN)){
-                    System.out.println("D" + " " + lastCollDirection);
-                    pos.setY(oldY-d);
-                    playerVelocityY.set(0);
-                    lastCollDirection = Direction.DOWN;
-                }
-                break;
-            }
-        }
-        if(!collisionDetected){
-            lastCollDirection = Direction.NONE;
-        }*/
         return pos;
     }
 }
