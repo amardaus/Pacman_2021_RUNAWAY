@@ -12,8 +12,6 @@ import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import static java.lang.Math.abs;
-
 public class PlayerAnimation extends AnimationTimer {
     final DoubleProperty playerVelocityX = new SimpleDoubleProperty();
     final DoubleProperty playerVelocityY = new SimpleDoubleProperty();
@@ -26,6 +24,7 @@ public class PlayerAnimation extends AnimationTimer {
     ArrayList<Circle> circles;
     Direction lastCollDirection;
     final double speed = 200;
+    Direction movingDirection;
 
 
     PlayerAnimation(Player player, Pane pane, int windowSizeX, int windowSizeY, ArrayList<Rectangle> borders, ArrayList<Circle> circles){
@@ -36,13 +35,13 @@ public class PlayerAnimation extends AnimationTimer {
         this.borders = borders;
         this.circles = circles;
         lastCollDirection = Direction.NONE;
+        movingDirection = Direction.NONE;
     }
 
     void move(Direction dir){
-        System.out.println(dir);
+        movingDirection = dir;
         switch (dir){
             case LEFT:
-                System.out.println("l");
                 playerVelocityX.set(-speed);
                 playerVelocityY.set(0);
                 break;
@@ -103,6 +102,25 @@ public class PlayerAnimation extends AnimationTimer {
 
     private Position checkCollisions(double oldX, double oldY, double deltaX, double deltaY) {
         Position pos = new Position(oldX+deltaX,oldY+deltaY);
+
+        Bounds playerBounds = player.characterIcon.getBoundsInParent();
+        Rectangle playerRect = new Rectangle(playerBounds.getMinX()-deltaX,playerBounds.getMinY()-deltaY,playerBounds.getWidth()+2*deltaX,playerBounds.getHeight()+2*deltaY);
+        for (Rectangle border: borders){
+            if(border.intersects(playerRect.getBoundsInParent())){
+                pos.setX(oldX);
+                pos.setY(oldY);
+            }
+            /*if(movingDirection == Direction.LEFT){
+                Bounds borderBounds = border.getBoundsInParent();
+                if(borderBounds.getMaxX() < playerBounds.getMinX()){
+                    System.out.println("Niedaleko ktoregos lewoo");
+                }
+                else{
+                    System.out.println("Cosiędzieje");
+                }
+                //System.out.println(border.getBoundsInParent());
+            }*/
+        }
         /*boolean movingUp = (deltaY < 0);
         boolean movingDown = (deltaY > 0);
         boolean movingLeft = (deltaX < 0);
